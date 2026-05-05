@@ -30,25 +30,23 @@ public class FuncionarioService {
     }
 
     public FuncionarioResponseDTO salvarFuncionario(FuncionarioRequestDTO dto) {
-        // 1. Corrected the syntax for findByEmail and isPresent()
         if (repository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Funcionario já cadastrado");
         }
 
-        // 2. Map DTO to Model
         FuncionarioModel novoFuncionario = new FuncionarioModel();
         novoFuncionario.setNome(dto.getNome());
         novoFuncionario.setEmail(dto.getEmail());
         novoFuncionario.setTelefone(dto.getTelefone());
 
-        // 3. Hash the password before saving!
+        
         String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
         novoFuncionario.setSenha(senhaCriptografada);
 
-        // 4. Save to Database
+        
         repository.save(novoFuncionario);
 
-        // 5. Return a ResponseDTO (don't return the Model with the password!)
+   
         return new FuncionarioResponseDTO(
                 novoFuncionario.getNome(),
                 novoFuncionario.getEmail(),
